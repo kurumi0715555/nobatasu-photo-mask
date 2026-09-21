@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="写真の顔や名前など、見せたくない部分をブラウザ上でモザイクまたは塗りつぶしにできる教員向け無料ツール。写真は外部へ送信せず、PNGで保存できます。">
+    
+    
+    <link rel="stylesheet" href="common/css/common.css">
+    <link rel="stylesheet" href="css/photo-mask.css">
+    <link rel="stylesheet" href="common/vendor/fontawesome/css/fontawesome.css">
+<link rel="stylesheet" href="common/vendor/fontawesome/css/solid.css">
+<title>写真の目かくし</title>
+<link rel="stylesheet" href="oss/standalone.css">
+<script defer src="oss/standalone.js"></script>
+</head>
+<body>
+    <div class="site-wrapper">
+        <aside class="ad-left"><!-- Ads injected by common-ads.js --></aside>
+        <div class="container">
+            <header>
+                <h1><i class="fas fa-user-shield" aria-hidden="true"></i> 写真の目かくし</h1>
+                <p class="subtitle">写真の顔や名前を、モザイク・塗りつぶしで隠して保存</p>
+            </header>
+
+            <main>
+                <div class="privacy-note privacy-badge" role="note">
+                    <i class="fas fa-shield-halved" aria-hidden="true"></i>
+                    <p><strong>画像は外部へ送信・保存しません。</strong>処理はこのブラウザ内だけで行い、元のファイルも変更しません。</p>
+                </div>
+
+                <section class="upload-panel" aria-labelledby="uploadHeading">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">STEP 1</p>
+                            <h2 id="uploadHeading">写真を読み込む</h2>
+                        </div>
+                        <p>JPEG・PNG・WebP（25MB、2000万画素、長辺8192pxまで）</p>
+                    </div>
+
+                    <div id="dropZone" class="drop-zone">
+                        <i class="fas fa-image" aria-hidden="true"></i>
+                        <p class="drop-title">ここに写真をドロップ</p>
+                        <p class="drop-subtitle">または、端末から写真を選んでください</p>
+                        <div class="upload-actions">
+                            <button id="chooseBtn" class="btn btn-primary" type="button"><i class="fas fa-folder-open" aria-hidden="true"></i> 写真を選ぶ</button>
+                            <button id="sampleBtn" class="btn btn-secondary" type="button"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> サンプルで試す</button>
+                        </div>
+                        <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+                    </div>
+                    <p id="status" class="status-message" role="status" aria-live="polite">写真を1枚読み込んでください。コピーした画像の貼り付けにも対応しています。</p>
+                    <p id="errorMessage" class="error-message" role="alert" hidden></p>
+                </section>
+
+                <section id="editor" class="editor" aria-labelledby="editorHeading" hidden>
+                    <div class="editor-heading">
+                        <div>
+                            <p class="eyebrow">STEP 2</p>
+                            <h2 id="editorHeading">隠す場所を囲む</h2>
+                            <p id="imageInfo" class="image-info"></p>
+                        </div>
+                        <div class="edit-summary"><span id="editCount">編集 0か所</span></div>
+                    </div>
+
+                    <div class="editor-toolbar" aria-label="編集ツール">
+                        <fieldset class="toolbar-group mode-group">
+                            <legend>隠し方</legend>
+                            <div class="segmented-control">
+                                <button id="modeMosaic" class="tool-button" type="button" aria-pressed="true"><i class="fas fa-border-all" aria-hidden="true"></i> モザイク</button>
+                                <button id="modeSolid" class="tool-button" type="button" aria-pressed="false"><i class="fas fa-square" aria-hidden="true"></i> 塗りつぶし</button>
+                            </div>
+                        </fieldset>
+
+                        <div class="toolbar-group strength-group">
+                            <label for="strength">モザイクの粗さ <output id="strengthValue" for="strength">24</output></label>
+                            <input id="strength" type="range" min="8" max="64" value="24" step="1">
+                        </div>
+
+                        <div class="toolbar-group history-actions" aria-label="編集履歴">
+                            <button id="undoBtn" class="tool-button" type="button" disabled><i class="fas fa-rotate-left" aria-hidden="true"></i> 元に戻す</button>
+                            <button id="redoBtn" class="tool-button" type="button" disabled><i class="fas fa-rotate-right" aria-hidden="true"></i> やり直す</button>
+                            <button id="resetBtn" class="tool-button reset-button" type="button" disabled><i class="fas fa-eraser" aria-hidden="true"></i> 全て解除</button>
+                        </div>
+
+                        <div class="toolbar-group zoom-group">
+                            <label for="zoom">表示倍率</label>
+                            <select id="zoom">
+                                <option value="fit">画面に合わせる</option>
+                                <option value="1">100%</option>
+                                <option value="2">200%</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p class="canvas-help"><i class="fas fa-arrow-pointer" aria-hidden="true"></i> 写真の上をドラッグして、隠したい範囲を囲みます。</p>
+                    <div id="canvasViewport" class="canvas-viewport" tabindex="0" aria-label="写真編集エリア。写真上をドラッグして範囲を選びます">
+                        <div id="canvasStage" class="canvas-stage">
+                            <canvas id="imageCanvas">お使いのブラウザはCanvasに対応していません。</canvas>
+                            <div id="selectionBox" class="selection-box" aria-hidden="true" hidden></div>
+                        </div>
+                    </div>
+
+                    <details class="coordinate-details">
+                        <summary>数値で範囲を指定</summary>
+                        <p>画像上の位置と大きさをピクセルで入力します。</p>
+                        <form id="coordinateForm" class="coordinate-form">
+                            <label for="rectX">左 X<input id="rectX" type="number" min="0" step="1" required></label>
+                            <label for="rectY">上 Y<input id="rectY" type="number" min="0" step="1" required></label>
+                            <label for="rectW">幅 W<input id="rectW" type="number" min="1" step="1" required></label>
+                            <label for="rectH">高さ H<input id="rectH" type="number" min="1" step="1" required></label>
+                            <button id="applyRectBtn" class="btn btn-secondary" type="submit"><i class="fas fa-check" aria-hidden="true"></i> この範囲に適用</button>
+                        </form>
+                    </details>
+
+                    <div class="save-panel">
+                        <div>
+                            <p class="save-title">編集した写真をPNGで保存</p>
+                            <p>元の写真とは別ファイルとしてダウンロードします。</p>
+                        </div>
+                        <button id="saveBtn" class="btn btn-success btn-large" type="button" disabled><i class="fas fa-download" aria-hidden="true"></i> PNGで保存</button>
+                    </div>
+                </section>
+
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle" aria-hidden="true"></i> 使い方</h3>
+                    <ol>
+                        <li><strong>写真を読み込む</strong>：写真をドロップするか「写真を選ぶ」を押します。操作を確認するだけなら「サンプルで試す」を選べます。</li>
+                        <li><strong>隠し方を選ぶ</strong>：「モザイク」か「塗りつぶし」を選び、写真の上で隠したい部分をドラッグして囲みます。</li>
+                        <li><strong>確認して保存する</strong>：「元に戻す」「やり直す」で調整し、「PNGで保存」を押します。</li>
+                    </ol>
+                    <p class="note"><i class="fas fa-user-lock" aria-hidden="true"></i> <strong>個人情報を確実に隠すには</strong>：実名、名札、書類などは、輪郭が残るモザイクより<strong>塗りつぶし</strong>をおすすめします。保存後の画像も開いて確認してください。</p>
+                    <p class="note"><i class="fas fa-wifi" aria-hidden="true"></i> <strong>通信について</strong>：アイコン用フォントなど画面表示のための通信は発生しますが、読み込んだ画像データは送信しません。</p>
+                </div>
+            </main>
+
+            <div class="ad-horizontal no-print">
+                <div class="ad-label">広告</div>
+                <div class="ad-horizontal-content"><i class="fas fa-rectangle-ad" aria-hidden="true"></i><p>728×90 レクタングル（大）バナー広告</p></div>
+            </div>
+            <footer><!-- Footer will be injected by common-footer.js --></footer>
+        </div>
+        <aside class="ad-right"><!-- Ads injected by common-ads.js --></aside>
+    </div>
+
+    
+    
+    
+    
+    
+    <script type="module" src="dist/photo-mask.js"></script>
+</body>
+</html>

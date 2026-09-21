@@ -1,0 +1,473 @@
+/* 写真の目かくし — 作業台レイアウト */
+
+/* 共通スタイルのdisplay指定よりhidden属性を優先する。 */
+main [hidden] { display: none !important; }
+.container, main, .editor, .upload-panel { min-width: 0; }
+.has-image .upload-panel { padding: var(--spacing-md); }
+.has-image .upload-panel .section-heading { display: none; }
+.has-image .drop-zone { padding: var(--spacing-sm); }
+.has-image .drop-zone > i,
+.has-image .drop-title,
+.has-image .drop-subtitle { display: none; }
+.has-image .status-message { margin-top: var(--spacing-sm); }
+.has-image .upload-actions { flex-direction: row; }
+.has-image .upload-actions .btn { width: auto; flex: 1 1 150px; }
+.image-info { overflow-wrap: anywhere; }
+.privacy-note.privacy-badge { flex-direction: row; text-align: left; }
+
+.privacy-note,
+.save-panel {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--info-tint);
+    color: var(--text-color);
+}
+
+.privacy-note {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.privacy-note > i {
+    flex: 0 0 auto;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.privacy-note p,
+.save-panel p,
+.section-heading p,
+.editor-heading p,
+.canvas-help,
+.coordinate-details p {
+    margin: 0;
+}
+
+.upload-panel,
+.editor {
+    padding: clamp(16px, 3vw, 28px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-large);
+    background: var(--surface-color);
+    box-shadow: var(--shadow-small);
+}
+
+.editor {
+    margin-top: var(--spacing-lg);
+}
+
+.section-heading,
+.editor-heading,
+.save-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.section-heading {
+    margin-bottom: var(--spacing-md);
+}
+
+.section-heading > p,
+.image-info {
+    color: var(--gray-darker);
+    font-size: var(--fs-caption);
+}
+
+.eyebrow {
+    color: var(--primary-color);
+    font-size: 0.78rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+}
+
+.section-heading h2,
+.editor-heading h2 {
+    margin: 2px 0 0;
+    color: var(--text-color);
+    font-size: var(--fs-h2);
+}
+
+.drop-zone {
+    padding: clamp(28px, 6vw, 52px) var(--spacing-lg);
+    border: 2px dashed var(--gray);
+    border-radius: var(--border-radius-large);
+    background: var(--surface-soft);
+    text-align: center;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.drop-zone.is-dragover {
+    border-color: var(--primary-color);
+    background: var(--info-tint);
+}
+
+.drop-zone > i {
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary-color);
+    font-size: clamp(2.2rem, 6vw, 3.2rem);
+}
+
+.drop-title {
+    margin: 0;
+    color: var(--text-color);
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-bold);
+}
+
+.drop-subtitle {
+    margin: var(--spacing-xs) 0 var(--spacing-md);
+    color: var(--gray-darker);
+    font-size: var(--fs-sub);
+}
+
+.upload-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.upload-actions .btn,
+.save-panel .btn,
+.coordinate-form .btn {
+    min-height: 44px;
+}
+
+.status-message,
+.error-message {
+    min-height: 24px;
+    margin: var(--spacing-md) 0 0;
+    font-size: var(--fs-sub);
+}
+
+.status-message {
+    color: var(--gray-darker);
+}
+
+.error-message {
+    padding: 10px 12px;
+    border-left: 4px solid var(--danger-color);
+    border-radius: var(--border-radius-small);
+    background: var(--danger-tint);
+    color: var(--danger-color);
+    font-weight: var(--fw-semibold);
+}
+
+.editor-heading {
+    margin-bottom: var(--spacing-md);
+}
+
+.edit-summary {
+    flex: 0 0 auto;
+    padding: 7px 12px;
+    border-radius: var(--border-radius-pill);
+    background: var(--surface-warm);
+    color: var(--text-color);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-bold);
+}
+
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--surface-soft);
+}
+
+.toolbar-group {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.toolbar-group legend,
+.toolbar-group > label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--gray-darker);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-semibold);
+}
+
+.segmented-control,
+.history-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tool-button {
+    min-height: 44px;
+    padding: 8px 13px;
+    border: 1px solid var(--gray);
+    border-radius: var(--border-radius-small);
+    background: var(--white);
+    color: var(--text-color);
+    font: inherit;
+    font-size: var(--fs-sub);
+    font-weight: var(--fw-semibold);
+    cursor: pointer;
+}
+
+.tool-button:hover:not(:disabled) {
+    border-color: var(--primary-color);
+    background: var(--info-tint);
+}
+
+.tool-button.is-active,
+.tool-button[aria-pressed="true"] {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.tool-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.reset-button {
+    color: var(--danger-color);
+}
+
+.strength-group {
+    flex: 1 1 180px;
+    max-width: 270px;
+}
+
+.strength-group label {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+}
+
+.strength-group output {
+    min-width: 2.4em;
+    color: var(--primary-color);
+    text-align: right;
+}
+
+.strength-group input {
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    accent-color: var(--primary-color);
+}
+
+.zoom-group select,
+.coordinate-form input {
+    min-height: 44px;
+    border: 1px solid var(--gray);
+    border-radius: var(--border-radius-small);
+    background: var(--white);
+    color: var(--text-color);
+    font: inherit;
+}
+
+.zoom-group select {
+    min-width: 154px;
+    padding: 8px 34px 8px 10px;
+}
+
+.canvas-help {
+    padding: var(--spacing-md) 0 var(--spacing-sm);
+    color: var(--gray-darker);
+    font-size: var(--fs-sub);
+}
+
+.canvas-viewport {
+    width: 100%;
+    max-height: min(68vh, 760px);
+    overflow: auto;
+    border: 1px solid var(--gray);
+    border-radius: var(--border-radius);
+    background-color: #dfe7e6;
+    background-image: linear-gradient(45deg, rgba(255,255,255,.45) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,.45) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255,255,255,.45) 75%), linear-gradient(-45deg, transparent 75%, rgba(255,255,255,.45) 75%);
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    background-size: 16px 16px;
+    overscroll-behavior: contain;
+}
+
+.canvas-stage {
+    position: relative;
+    margin: auto;
+    touch-action: none;
+    user-select: none;
+}
+
+#imageCanvas {
+    display: block;
+    max-width: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.selection-box {
+    position: absolute;
+    z-index: 2;
+    border: 2px solid var(--warm-accent-color);
+    background: rgba(242, 165, 65, 0.16);
+    box-shadow: 0 0 0 1px rgba(23, 37, 38, 0.65);
+    pointer-events: none;
+}
+
+.coordinate-details {
+    margin-top: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--surface-soft);
+}
+
+.coordinate-details summary {
+    min-height: 44px;
+    padding: 11px var(--spacing-md);
+    color: var(--primary-color);
+    font-weight: var(--fw-semibold);
+    cursor: pointer;
+}
+
+.coordinate-details > p {
+    padding: 0 var(--spacing-md) var(--spacing-sm);
+    color: var(--gray-darker);
+    font-size: var(--fs-caption);
+}
+
+.coordinate-form {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(90px, 1fr)) auto;
+    gap: var(--spacing-sm);
+    align-items: end;
+    padding: 0 var(--spacing-md) var(--spacing-md);
+}
+
+.coordinate-form label {
+    color: var(--gray-darker);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-semibold);
+}
+
+.coordinate-form input {
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px 10px;
+}
+
+.save-panel {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.save-title {
+    color: var(--text-color);
+    font-weight: var(--fw-bold);
+}
+
+.save-panel p:not(.save-title) {
+    color: var(--gray-darker);
+    font-size: var(--fs-caption);
+}
+
+.tool-button:focus-visible,
+.drop-zone:focus-visible,
+.canvas-viewport:focus-visible,
+.coordinate-details summary:focus-visible,
+.zoom-group select:focus-visible,
+.coordinate-form input:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+    .privacy-note,
+    .section-heading,
+    .editor-heading,
+    .save-panel {
+        align-items: flex-start;
+    }
+
+    .section-heading,
+    .editor-heading,
+    .save-panel {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .editor-toolbar {
+        align-items: stretch;
+    }
+
+    .toolbar-group,
+    .strength-group {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .segmented-control .tool-button,
+    .history-actions .tool-button {
+        flex: 1 1 130px;
+    }
+
+    .zoom-group select,
+    .save-panel .btn {
+        width: 100%;
+    }
+
+    .coordinate-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .coordinate-form .btn {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 430px) {
+    body { padding: 10px; }
+    main { padding: 12px; }
+    .upload-panel,
+    .editor {
+        padding: var(--spacing-md);
+    }
+
+    .upload-actions {
+        flex-direction: column;
+    }
+
+    .upload-actions .btn {
+        width: 100%;
+        flex-basis: auto;
+    }
+
+    .segmented-control .tool-button { flex: 1 1 0; padding: 8px; }
+    .history-actions .tool-button { flex: 1 1 75px; padding: 8px 4px; font-size: 0.8rem; }
+
+    .coordinate-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .drop-zone {
+        transition: none;
+    }
+}
+
+@media print {
+    .privacy-note,
+    .upload-panel,
+    .editor,
+    .instructions {
+        box-shadow: none;
+    }
+}
