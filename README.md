@@ -26,13 +26,24 @@ DockerなしではPython 3.10以上とNode.js 22を用意して実行します�
 
 ```sh
 npm ci --ignore-scripts
-npm run typecheck
 python3 scripts/build.py
-python3 -m unittest scripts/test_build.py
 python3 -m http.server 8091 --bind 127.0.0.1 --directory build/site
 ```
 
 編集する正本は `src/` のTypeScriptです。ビルド時に `dist/` を再生成します。 必要なライブラリはローカル同梱しています。初回のDockerイメージ取得・npm依存インストールにはインターネット接続が必要ですが、通常のアプリ画面は外部CDNを取得しません。
+
+## 開発・テスト
+
+Python 3.10以上とNode.js 22を用意し、リポジトリのルートで依存関係をインストールして配布物をビルドしてから検査します。
+
+```sh
+npm ci --ignore-scripts
+python3 scripts/build.py
+npm run typecheck
+python3 -m unittest scripts/test_build.py
+```
+
+`scripts/test_build.py` は、生成ZIPと配布ファイル構成を検査します。アプリの全操作を機能検証するものではありません。
 
 ## データの扱い
 
